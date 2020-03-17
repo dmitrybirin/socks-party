@@ -2,6 +2,7 @@ import React from 'react'
 import { hot } from 'react-hot-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
+import useSystemTheme from './useSystemTheme'
 
 const themes = {
 	light: {
@@ -57,9 +58,11 @@ const Footer = styled.footer`
 `
 
 const App = () => {
+	const theme = useSystemTheme()
+
 	return (
 		<>
-			<GlobalStyle theme={'dark'} />
+			<GlobalStyle theme={theme || 'dark'} />
 
 			<Container>
 				<Title>🧦🤔 Socks Party 🤔🧦</Title>
@@ -67,9 +70,7 @@ const App = () => {
 				<Content>
 					<Game />
 				</Content>
-				<Footer>
-					Made with 🧦 & ❤️ by Dmitry Birin
-				</Footer>
+				<Footer>Made with 🧦 & ❤️ by Dmitry Birin</Footer>
 			</Container>
 		</>
 	)
