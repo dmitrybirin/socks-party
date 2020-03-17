@@ -46,7 +46,9 @@ const Container = styled.div`
 `
 
 const Content = styled.div`
-	flex: 1 0 auto;
+	flex: 1;
+	display: flex;
+	align-items: center;
 `
 
 const Footer = styled.footer`
