@@ -8,7 +8,7 @@ const Sock = ({ size, number }) => {
 		throw new Error(`Number should be only int from 1 to 16. You have ${number}`)
 	}
 	const SockSVG = AllSocks[`Sock${number}`]
-	return <SockSVG viewBox={`0 0 ${size} ${size}`} width={`${size}px`} height={`${size}px`} />
+	return <SockSVG preserveAspectRatio="xMidYMid meet" width={`${size}`} height={`${size}`} />
 }
 
 Sock.propTypes = {
