@@ -3,12 +3,20 @@ import PropTypes from 'prop-types'
 
 import AllSocks from './socks'
 
-const Sock = ({ size, number }) => {
+const Sock = ({ size, number, which }) => {
 	if (typeof number !== 'number' || number < 1 || number > 16) {
 		throw new Error(`Number should be only int from 1 to 16. You have ${number}`)
 	}
 	const SockSVG = AllSocks[`Sock${number}`]
-	return <SockSVG preserveAspectRatio="xMidYMid meet" width={`${size}`} height={`${size}`} />
+	const sockSVGProps = {
+		transform: which === 'left' ? 'scale (-1, 1)' : '',
+		'transform-origin': which === 'left' ? 'center' : '',
+		preserveAspectRatio: 'xMidYMid meet',
+		width: `${size}`,
+		height: `${size}`,
+	}
+
+	return <SockSVG {...sockSVGProps} />
 }
 
 Sock.propTypes = {

@@ -24,13 +24,41 @@ const Ready = styled.h3`
 `
 
 const Game = () => {
-	const [number, setNumber] = useState(1)
+	const [leftNumber, setLeftNumber] = useState(1)
+	const [rightNumber, setRightNumber] = useState(1)
+	const speeds = [50, 100, 150, 200, 300, 500, 1000, 1500, 2000]
+	const [speed, setSpeed] = useState(speeds[0])
+
+	const answer = {
+		left: 1,
+		right: 3
+	}
+
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setNumber(i => (i + 1) % 16 || 1)
-		}, 500)
+			setSpeed(speed => {
+				const newIndex = (speeds.indexOf(speed) + 1) % speeds.length
+				return speeds[newIndex]
+			})
+		}, 1000)
+		if (speeds.indexOf(speed) === speeds.length - 1) {
+			clearInterval(interval)
+		}
 		return () => clearInterval(interval)
-	}, [])
+	}, [speed])
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setLeftNumber(i => (i + 1) % 16 || 1)
+			setRightNumber(i => (i + 2) % 16 || 1)
+		}, speed)
+		if (speeds.indexOf(speed) === speeds.length - 1) {
+			clearInterval(interval)
+			setLeftNumber(answer.left)
+			setRightNumber(answer.right)
+		}
+		return () => clearInterval(interval)
+	}, [speed])
 	return (
 		<>
 			<ReadySoon>
@@ -38,7 +66,8 @@ const Game = () => {
 				<Soon>SOON</Soon>
 			</ReadySoon>
 			<h3>but for now...</h3>
-			<Sock number={number} size={550} />
+			<Sock number={leftNumber} which="left" size={550} />
+			<Sock number={rightNumber} size={550} />
 		</>
 	)
 }
