@@ -16,7 +16,14 @@ const Soon = styled.p`
 	font-family: 'Oswald', sans-serif;
 	font-size: 250px;
 	margin: 0;
+	text-align: center;
 	line-height: 200px;
+`
+
+
+const ForNow = styled.h3`
+	margin-top: 30px;
+	text-align: center;
 `
 
 const Ready = styled.h3`
@@ -31,7 +38,7 @@ const Game = () => {
 
 	const answer = {
 		left: 1,
-		right: 3
+		right: 3,
 	}
 
 	useEffect(() => {
@@ -64,10 +71,10 @@ const Game = () => {
 			<ReadySoon>
 				<Ready>game will be ready </Ready>
 				<Soon>SOON</Soon>
+				<ForNow>but for now...</ForNow>
+				<Sock number={leftNumber} which="left" size={550} />
+				<Sock number={rightNumber} size={550} />
 			</ReadySoon>
-			<h3>but for now...</h3>
-			<Sock number={leftNumber} which="left" size={550} />
-			<Sock number={rightNumber} size={550} />
 		</>
 	)
 }
