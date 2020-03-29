@@ -10,6 +10,8 @@ const useRoulette = (answer, gears, gearInterval) => {
 	if (!answer) {
 		throw new Error('There is no answer submitted. I need answer!!!')
 	}
+
+	const [leftAnswer, rightAnswer] = answer
 	const speedArray = gears || [50, 100, 150, 200, 300, 500, 1000, 1500, 2000]
 
 	const speedChangeTime = gearInterval || 1000
@@ -39,8 +41,8 @@ const useRoulette = (answer, gears, gearInterval) => {
 		}, speed)
 		if (speedArray.indexOf(speed) === speedArray.length - 1) {
 			clearInterval(interval)
-			setLeftNumber(answer.left)
-			setRightNumber(answer.right)
+			setLeftNumber(leftAnswer)
+			setRightNumber(rightAnswer)
 		}
 		return () => clearInterval(interval)
 	}, [speed])

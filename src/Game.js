@@ -33,10 +33,7 @@ const Ready = styled.h3`
 
 const Game = () => {
 
-	const answer = {
-		left: 5,
-		right: 8,
-	}
+	const answer = [17,17]
 
 	const [left, right] = useRoulette(answer)
 	
