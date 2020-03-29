@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import AllSocks from './socks'
 
 const Sock = ({ size, number, which }) => {
-	if (typeof number !== 'number' || number < 1 || number > 16) {
-		throw new Error(`Number should be only int from 1 to 16. You have ${number}`)
+	if (typeof number !== 'number' || number < 1 || number > 17) {
+		throw new Error(`Number should be only int from 1 to 17. You have ${number}`)
 	}
 	const SockSVG = AllSocks[`Sock${number}`]
 	const sockSVGProps = {

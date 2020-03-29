@@ -6,6 +6,7 @@ import Sock13 from './Sock13'
 import Sock14 from './Sock14'
 import Sock15 from './Sock15'
 import Sock16 from './Sock16'
+import Sock17 from './Sock17'
 import Sock2 from './Sock2'
 import Sock3 from './Sock3'
 import Sock4 from './Sock4'
@@ -32,4 +33,5 @@ export default {
 	Sock14,
 	Sock15,
 	Sock16,
+	Sock17
 }
