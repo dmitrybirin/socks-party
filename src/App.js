@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
 import useSystemTheme from './useSystemTheme'
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 
 const themes = {
 	light: {
@@ -57,11 +58,20 @@ const Footer = styled.footer`
 	margin-bottom: 10px;
 `
 
+const client = new ApolloClient({
+	uri: 'https://graphql.fauna.com/graphql',
+	cache: new InMemoryCache(),
+	// TODO chesking for now, will delete and revoke. Tell me if I didn't :)))
+	headers: {
+		Authorization: 'Bearer fnADoI3XFeACAG7zlJal2sduazSuEqDjAn6Yy1rk',
+	},
+})
+
 const App = () => {
 	const theme = useSystemTheme()
 
 	return (
-		<>
+		<ApolloProvider client={client}>
 			<GlobalStyle theme={theme || 'dark'} />
 
 			<Container>
@@ -73,7 +83,7 @@ const App = () => {
 				</Content>
 				<Footer>Made with 🧦 & ❤️ by Dmitry Birin</Footer>
 			</Container>
-		</>
+		</ApolloProvider>
 	)
 }
 

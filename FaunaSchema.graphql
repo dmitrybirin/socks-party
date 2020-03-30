@@ -1,0 +1,9 @@
+type Answer @collection(name: "answers") {
+	date: String!
+	answer: [Int]!
+}
+
+type Query {
+	allAnswers: [Answer!]!
+	answer(string)
+}

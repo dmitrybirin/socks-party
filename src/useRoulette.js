@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 
-const NUMBER_OF_SOCKS = 16
+const NUMBER_OF_SOCKS = 17
 
 const socksIndexArray = [...Array(NUMBER_OF_SOCKS+1).keys()].slice(1)
 
 const getRandomSockNumber = () => socksIndexArray[Math.floor(Math.random() * socksIndexArray.length)]
 
 const useRoulette = (answer, gears, gearInterval) => {
-	if (!answer) {
-		throw new Error('There is no answer submitted. I need answer!!!')
-	}
+	// if (!answer) {
+	// 	return 
+	// }
 
-	const [leftAnswer, rightAnswer] = answer
+	const [leftAnswer, rightAnswer] = answer || [getRandomSockNumber(), getRandomSockNumber()]
 	const speedArray = gears || [50, 100, 150, 200, 300, 500, 1000, 1500, 2000]
 
 	const speedChangeTime = gearInterval || 1000
