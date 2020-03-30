@@ -21,7 +21,6 @@ const Soon = styled.p`
 	line-height: 200px;
 `
 
-
 const ForNow = styled.h3`
 	margin-top: 30px;
 	text-align: center;
@@ -32,11 +31,10 @@ const Ready = styled.h3`
 `
 
 const Game = () => {
-
-	const answer = [17,17]
+	const answer = [11, 10]
 
 	const [left, right] = useRoulette(answer)
-	
+
 	return (
 		<>
 			<ReadySoon>
