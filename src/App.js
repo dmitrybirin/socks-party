@@ -1,9 +1,8 @@
 import React from 'react'
-import { hot } from 'react-hot-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
 import useSystemTheme from './useSystemTheme'
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
+import { useQuery, gql } from '@apollo/client'
 
 const themes = {
 	light: {
@@ -58,20 +57,22 @@ const Footer = styled.footer`
 	margin-bottom: 10px;
 `
 
-const client = new ApolloClient({
-	uri: 'https://graphql.fauna.com/graphql',
-	cache: new InMemoryCache(),
-	// TODO chesking for now, will delete and revoke. Tell me if I didn't :)))
-	headers: {
-		Authorization: 'Bearer fnADoI3XFeACAG7zlJal2sduazSuEqDjAn6Yy1rk',
-	},
-})
-
 const App = () => {
 	const theme = useSystemTheme()
+	const { data } = useQuery(
+		gql`
+			query answerByDateQuery($date: String!) {
+				answerByDate(date: $date) {
+					date
+					answer
+				}
+			}
+		`,
+		{ variables: { date: new Date().toISOString().slice(0, 10) } }
+	)
 
 	return (
-		<ApolloProvider client={client}>
+		<>
 			<GlobalStyle theme={theme || 'dark'} />
 
 			<Container>
@@ -79,12 +80,12 @@ const App = () => {
 				<Title>🧦🤔 Socks Party 🤔🧦</Title>
 				<SubTitle>socks guessing game</SubTitle>
 				<Content>
-					<Game />
+					{data ? <Game answer={data.answerByDate.answer} /> : <h2>There is no socks</h2>}
 				</Content>
 				<Footer>Made with 🧦 & ❤️ by Dmitry Birin</Footer>
 			</Container>
-		</ApolloProvider>
+		</>
 	)
 }
 
-export default hot(module)(App)
+export default App
