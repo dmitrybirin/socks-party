@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Sock from './Sock'
 import useRoulette from './useRoulette'
-
-// const Image = styled.img`
-// 	width: 400px;
-// 	margin: 10px;
-// `
+import useSockSize from './useSockSize'
+import { useGameContext } from './GameContext'
+import { useQuery, gql } from '@apollo/client'
 
 const GameContainer = styled.div`
 	display: flex;
@@ -22,9 +20,10 @@ const OptionsContainer = styled.div`
 
 const Button = styled.button`
 	background: transparent;
+	opacity: ${props => (props.opacity ? props.opacity : 1)};
 	/* TODO need to be themed */
 	color: ${props => (props.disabled ? '#c4c4c4' : '#ffc400')};
-	font-size: ${props => (props.big ? '3em' : '2em')};
+	font-size: ${props => (props.big ? '4em' : '2em')};
 	font-weight: 500;
 	margin: 1em;
 	padding: 0.25em 1em;
@@ -50,13 +49,29 @@ const Button = styled.button`
 	}
 `
 
+const SockPair = styled.div`
+	min-width: 300px;
+`
+
 const SockRoulette = ({ answer }) => {
-	const [left, right] = useRoulette(answer)
+	const [, setGameState] = useGameContext()
+	const { socks, done } = useRoulette(answer)
+
+	const [l, r] = answer
+
+	useEffect(() => {
+		if (done) {
+			setGameState({ rouletteDone: done, disclaimer: l === r ? 'same' : 'different' })
+		}
+	}, [done])
+
+	const size = useSockSize()
+
 	return (
-		<>
-			<Sock number={left} which="left" size={550} />
-			<Sock number={right} size={550} />
-		</>
+		<SockPair>
+			<Sock number={socks.left} which="left" size={size} />
+			<Sock number={socks.right} size={size} />
+		</SockPair>
 	)
 }
 
@@ -65,44 +80,97 @@ const getScale = (buttonOption, option) => {
 		return null
 	}
 	if (buttonOption !== option) {
-		return '0.8'
+		return '0.7'
 	}
 	if (buttonOption === option) {
-		return '1.2'
+		return '1.3'
 	}
 }
 
-const Game = ({ answer }) => {
-	const [triggerGame, setTriggerGame] = useState(false)
-	const [option, setOption] = useState(null)
+const getBrowserDate = () => {
+	const now = new Date()
+	const month = (now.getMonth() + 1).toString().padStart(2, '0')
+	const day = now
+		.getDate()
+		.toString()
+		.padStart(2, '0')
+	return `${now.getFullYear()}-${month}-${day}`
+}
+
+const getDisclaimer = rawData => {
+	const { data, loading, error } = rawData
+	if (loading) {
+		return 'Searching for socks...'
+	}
+
+	if (error) {
+		// TODO need to have Errors in scheme
+		if (`${error.message}`.includes('Value not found at path')) {
+			return 'There is no socks\nfor today'
+		}
+		return 'Oops\nDo you see the other sock?\nWrite to your admin or whatever'
+	}
+
+	if (data) {
+		return 'The two has been chosen'
+	}
+	return null
+}
+
+const Game = () => {
+	const [gameState, setGameState] = useGameContext()
+
+	const fetchedRawData = useQuery(
+		gql`
+			query answerByDateQuery($date: String!) {
+				answerByDate(date: $date) {
+					date
+					answer
+				}
+			}
+		`,
+		{ variables: { date: getBrowserDate() } }
+	)
+	useEffect(() => {
+		setGameState({
+			fetchedRawData,
+			answer: fetchedRawData.data && fetchedRawData.data.answerByDate.answer,
+			disclaimer: getDisclaimer(fetchedRawData),
+		})
+	}, [fetchedRawData.data, fetchedRawData.error, fetchedRawData.loading])
+	console.log(gameState)
 
 	return (
 		<>
 			<GameContainer>
-				<OptionsContainer>
-					<Button scale={getScale('same', option)} onClick={() => setOption('same')}>
-						🧦 SAME 🧦
-					</Button>
-					<Button
-						scale={getScale('different', option)}
-						onClick={() => setOption('different')}
-					>
-						🍌 DIFFERENT 🌵
-					</Button>
-				</OptionsContainer>
+				{!gameState.rouletteStarted && (
+					<OptionsContainer>
+						<Button
+							scale={getScale('same', gameState.optionSelected)}
+							onClick={() => setGameState({ optionSelected: 'same' })}
+						>
+							🧦 SAME 🧦
+						</Button>
+						<Button
+							scale={getScale('different', gameState.optionSelected)}
+							onClick={() => setGameState({ optionSelected: 'different' })}
+						>
+							🍌 DIFFERENT 🌵
+						</Button>
+					</OptionsContainer>
+				)}
 
-				{!triggerGame && (
+				{!gameState.rouletteStarted && (
 					<Button
-						disabled={!option}
-						glow={option}
+						disabled={!gameState.optionSelected}
+						glow={gameState.optionSelected}
 						big
-						onClick={() => setTriggerGame(true)}
+						onClick={() => setGameState({ rouletteStarted: true })}
 					>
 						SPIN THE SOCKS
 					</Button>
 				)}
-				{/* {!triggerGame && <button onClick={() => setTriggerGame(true)}> THE SOCKS</button>} */}
-				{triggerGame && <SockRoulette answer={answer} />}
+				{gameState.rouletteStarted && <SockRoulette answer={gameState.answer} />}
 			</GameContainer>
 		</>
 	)

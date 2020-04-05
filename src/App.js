@@ -1,8 +1,8 @@
 import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
+import { GameContextProvider, useGameContext } from './GameContext'
 import useSystemTheme from './useSystemTheme'
-import { useQuery, gql } from '@apollo/client'
 
 const themes = {
 	light: {
@@ -67,64 +67,13 @@ const Disclaimer = styled.h1`
 	justify-content: center;
 `
 
-const GameState = ({ state }) => {
-	const { data, loading, error } = state
-	if (loading) {
-		return <Disclaimer>Searching for socks...</Disclaimer>
-	}
-
-	if (error) {
-		// TODO need to have Errors in scheme
-		if (`${error.message}`.includes('Value not found at path')) {
-			return (
-				<Disclaimer>
-					There is no socks
-					<br />
-					for today
-				</Disclaimer>
-			)
-		}
-		return (
-			<Disclaimer>
-				Oops
-				<br />
-				Do you see the other sock?
-				<br />
-				Write to your admin or whatever
-			</Disclaimer>
-		)
-	}
-
-	if (data) {
-		return <Disclaimer>The two has been chosen</Disclaimer>
-	}
-	return null
-}
-
-const getBrowserDate = () => {
-	const now = new Date()
-	const month = (now.getMonth() + 1).toString().padStart(2, '0')
-	const day = now
-		.getDate()
-		.toString()
-		.padStart(2, '0')
-	return `${now.getFullYear()}-${month}-${day}`
+const GameDisclaimer = () => {
+	const [{ disclaimer }] = useGameContext()
+	return <Disclaimer>{disclaimer}</Disclaimer>
 }
 
 const App = () => {
-	console.log(getBrowserDate())
 	const theme = useSystemTheme()
-	const state = useQuery(
-		gql`
-			query answerByDateQuery($date: String!) {
-				answerByDate(date: $date) {
-					date
-					answer
-				}
-			}
-		`,
-		{ variables: { date: getBrowserDate() } }
-	)
 
 	return (
 		<>
@@ -135,8 +84,10 @@ const App = () => {
 				<Title>🧦🤔 Socks Party 🤔🧦</Title>
 				<SubTitle>socks guessing game</SubTitle>
 				<Content>
-					<GameState state={state} />
-					{state.data && <Game answer={state.data.answerByDate.answer} />}
+					<GameContextProvider>
+						<GameDisclaimer />
+						<Game />
+					</GameContextProvider>
 				</Content>
 				<Footer>Made with 🧦 & ❤️ by Dmitry Birin</Footer>
 			</Container>
