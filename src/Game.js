@@ -54,14 +54,24 @@ const SockPair = styled.div`
 `
 
 const SockRoulette = ({ answer }) => {
-	const [, setGameState] = useGameContext()
+	const [gameState, setGameState] = useGameContext()
 	const { socks, done } = useRoulette(answer)
-
-	const [l, r] = answer
 
 	useEffect(() => {
 		if (done) {
-			setGameState({ rouletteDone: done, disclaimer: l === r ? 'same' : 'different' })
+			const [l, r] = answer
+			const optionAnswered = l === r ? 'same' : 'different'
+			setGameState({ rouletteDone: done, disclaimer: optionAnswered })
+			const timeout = setTimeout(
+				setGameState({
+					disclaimer:
+						optionAnswered === gameState.optionSelected
+							? '🎉 YOU\'VE WON 🎉'
+							: '😢YOU\'VE MISTAKEN😢',
+				}),
+				2500
+			)
+			return () => clearTimeout(timeout)
 		}
 	}, [done])
 
