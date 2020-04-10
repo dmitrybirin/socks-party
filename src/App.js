@@ -80,7 +80,6 @@ const App = () => {
 			<GlobalStyle theme={theme || 'dark'} />
 
 			<Container>
-				<i className="fas fa-socks"></i>
 				<Title>🧦🤔 Socks Party 🤔🧦</Title>
 				<SubTitle>socks guessing game</SubTitle>
 				<Content>
