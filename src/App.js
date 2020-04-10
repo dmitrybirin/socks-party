@@ -2,25 +2,14 @@ import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
 import { GameContextProvider, useGameContext } from './GameContext'
-import useSystemTheme from './useSystemTheme'
-
-const themes = {
-	light: {
-		background: '#f0f0f0',
-		color: '#4d4d4d',
-	},
-	dark: {
-		background: '#484d5c',
-		color: '#ffc400',
-	},
-}
+import useTheme from './useTheme'
 
 const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0;
 		padding: 0;
-		background-color: ${props => themes[props.theme].background};
-		color: ${props => themes[props.theme].color};
+		background-color: ${props => props.theme.background};
+		color: ${props => props.theme.mainColor};
 		font-family: 'Cardo', serif;
 	}
 
@@ -73,11 +62,11 @@ const GameDisclaimer = () => {
 }
 
 const App = () => {
-	const theme = useSystemTheme()
+	const theme = useTheme()
 
 	return (
 		<>
-			<GlobalStyle theme={theme || 'dark'} />
+			<GlobalStyle theme={theme} />
 
 			<Container>
 				<Title>🧦🤔 Socks Party 🤔🧦</Title>
