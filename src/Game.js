@@ -140,7 +140,7 @@ const Game = () => {
 	}, [fetchedRawData.data, fetchedRawData.error, fetchedRawData.loading])
 	console.log(gameState)
 
-	return (
+	return !gameState.answer ? null : (
 		<>
 			<GameContainer>
 				{!gameState.rouletteStarted && (
