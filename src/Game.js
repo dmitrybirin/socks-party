@@ -118,7 +118,6 @@ const Game = () => {
 			disclaimer: getDisclaimer(fetchedRawData),
 		})
 	}, [fetchedRawData.data, fetchedRawData.error, fetchedRawData.loading])
-	console.log(gameState)
 
 	return !gameState.answer ? null : (
 		<>
