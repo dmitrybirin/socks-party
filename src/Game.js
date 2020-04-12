@@ -36,8 +36,8 @@ const SockRoulette = ({ answer }) => {
 				setGameState({
 					disclaimer:
 						optionAnswered === gameState.optionSelected
-							? "🎉 YOU'VE WON 🎉"
-							: "😢YOU'VE MISTAKEN😢",
+							? '🎉 YOU\'VE WON 🎉'
+							: '😢YOU\'VE MISTAKEN😢',
 				}),
 				2500
 			)
