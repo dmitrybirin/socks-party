@@ -13,9 +13,14 @@ const GlobalStyle = createGlobalStyle`
 		font-family: 'Cardo', serif;
 	}
 
-	h1, h2, h3, h4, h5, h6, footer {
+	h1, h2, h3, h4, h5, h6, footer, a  {
 		font-family: 'Oswald', sans-serif;
 		text-transform: uppercase;
+	}
+
+	a {
+		text-decoration: none;
+		color: ${props => props.theme.mainColor};
 	}
 	
 `
@@ -77,7 +82,7 @@ const App = () => {
 						<Game />
 					</GameContextProvider>
 				</Content>
-				<Footer>Made with 🧦 & ❤️ by Dmitry Birin</Footer>
+				<Footer>Made with 🧦 & ❤️ by Dmitry Birin & <a href="https://www.behance.net/ollyjolly">Olga Lepaeva</a></Footer>
 			</Container>
 		</>
 	)
