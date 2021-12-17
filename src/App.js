@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import Game from './Game'
-import { GameContextProvider } from './GameContext'
+import { GameContextProvider, useGameContext } from './GameContext'
 import useTheme from './useTheme'
 
 const GlobalStyle = createGlobalStyle`
@@ -62,9 +62,9 @@ const Disclaimer = styled.h1`
 `
 
 const GameDisclaimer = () => {
-	// const [{ disclaimer }] = useGameContext()
-	// <Disclaimer>{disclaimer}</Disclaimer>
-	return <><Disclaimer>🎉OLGA WON THE COMPETION with 19❗against 8 🎉</Disclaimer><Disclaimer>AND COUNTING...</Disclaimer></>
+	const [{ disclaimer }] = useGameContext()
+	return <Disclaimer>{disclaimer}</Disclaimer>
+	// return <><Disclaimer>🎉OLGA WON THE COMPETION with 19❗against 8 🎉</Disclaimer><Disclaimer>AND COUNTING...</Disclaimer></>
 }
 
 const App = () => {
